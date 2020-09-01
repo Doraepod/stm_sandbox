@@ -1,3 +1,5 @@
+#include "include_all.h"
+
 uint8_t port_lcd    = 0;
 
 uint8_t buf[1] = {0};
@@ -90,8 +92,7 @@ void lcdWriteByte( uint8_t byte )
 {
 
     buf[0] = byte;
-
-    msg_t msg = i2cMasterTransmitTimeout( i2cDriver, (uint16_t)0x27, buf, 1, NULL, 0, 1000 );
+    msg_t msg = i2c_simple_write(lcd_address, buf, 1, 1000);
 
     if( msg == MSG_OK ) // just to be sure that the address of LCD is correct
     {

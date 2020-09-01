@@ -1,12 +1,13 @@
 #ifndef LCD_H_
 #define LCD_H_
 
-#define e_set()     lcdWriteByte( port_lcd |= 0x04 )  // set E in 1
-#define e_reset()   lcdWriteByte( port_lcd &= ~0x04 ) // set E in 0
-#define rs_set()    lcdWriteByte( port_lcd |= 0x01 )  // set RS in 1
-#define rs_reset()  lcdWriteByte( port_lcd &= ~0x01 ) // set RS in 0
-#define set_led()   lcdWriteByte( port_lcd |= 0x08 )  // turn on backlight
-#define set_write() lcdWriteByte( port_lcd &= ~0x02 ) // writing into lcd-memory
+#define lcd_address 0x27                                // i2c address of lcd
+#define e_set()     lcdWriteByte( port_lcd |= 0x04 )    // set E in 1
+#define e_reset()   lcdWriteByte( port_lcd &= ~0x04 )   // set E in 0
+#define rs_set()    lcdWriteByte( port_lcd |= 0x01 )    // set RS in 1
+#define rs_reset()  lcdWriteByte( port_lcd &= ~0x01 )   // set RS in 0
+#define set_led()   lcdWriteByte( port_lcd |= 0x08 )    // turn on backlight
+#define set_write() lcdWriteByte( port_lcd &= ~0x02 )   // writing into lcd-memory
 
 /*
  * @brief   Send information to LCD via I2C (aka send command)
