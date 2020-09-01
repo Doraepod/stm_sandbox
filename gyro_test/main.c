@@ -1,11 +1,11 @@
 #include "include_all.h"
 
-float   angular_speed[3] = {0, 0, 0};
-float   gyro_mean_error[3] = {0, 0, 0};
-float   angle[3] = {0, 0, 0};
-
 int main(void)
 {
+    float   angular_speed[3] = {0, 0, 0};
+    float   gyro_mean_error[3] = {0, 0, 0};
+    float   angle[3] = {0, 0, 0};
+
     chSysInit();
     halInit();
     i2c_start();
