@@ -1,11 +1,46 @@
 #include "include_all.h"
 
+float   angular_speed[3] = {0, 0, 0};
+float   gyro_mean_error[3] = {0, 0, 0};
+float   angle[3] = {0, 0, 0};
 
-
+static virtual_timer_t  gyroscope_vt;
+float                   gyro_angle_xyz[3]   = {0, 0, 0};
 
 float   gyro_speed[3] = {0, 0, 0};
 
+void myFunc(void)
+{
+    uint8_t i;
+    msg_t msg = get_gyro_speed(angular_speed);
+    for(i = 0; i < 3; i++)
+    {
+        angular_speed[i] -= gyro_mean_error[i];
+        if (abs(angular_speed[i]) < 0.01) angular_speed[i] = 0;
+        angle[i] += angular_speed[i] * 0.02;
+    }
+}
 
+static void gyroIntegrationCallback(void *args)
+{
+    chSysLockFromISR();
+    chVTSetI(&gyroscope_vt, MS2ST(GYRO_INT_PERIOD), gyroIntegrationCallback, NULL);
+    chSysUnlockFromISR();
+    palToggleLine(LINE_LED1);
+    lcdClear();
+//    lcdSendNumber(0, 0, angle[0]);
+//    lcdSendNumber(8, 0, angle[1]);
+//    lcdSendNumber(0, 1, angle[2]);
+    lcdSendNumber(0, 0, 20);
+
+}
+
+
+void startGyroPosition(void)
+{
+    chVTObjectInit(&gyroscope_vt);
+    chVTSet( &gyroscope_vt, MS2ST(GYRO_INT_PERIOD), gyroIntegrationCallback, NULL );
+}
 /**
  * @brief   Initialize gyroscope
  */
@@ -20,7 +55,7 @@ void gyroscope_init(void)
     initbuf[4] = 0x30;                      // 2000dps
 
     msg_t msg = i2c_simple_write(GYRO_ADDR, initbuf, 5, 1000);
-
+    get_gyro_error(gyro_mean_error);
     msg = i2c_register_read(GYRO_ADDR, WHO_AM_I, gyro_id, 1, 1000);
     if (gyro_id[0] == GYRO_ID)
     {

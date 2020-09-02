@@ -7,6 +7,11 @@
 #define WHO_AM_I        0x0F    // sensor id register
 #define GYRO_ID         0xD7    // id of the gyroscope to compare
 #define GYRO_DATA_REG   0xA8    // address of OUT_X_L register with autoincrement bit set
+#define GYRO_INT_PERIOD 100
+
+void myFunc(void);
+
+void startGyroPosition(void);
 
 
 void gyroscope_init(void);
