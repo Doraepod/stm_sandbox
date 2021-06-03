@@ -15,8 +15,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "lcd.h"
 #include "i2c.h"
 #include "gyroscope.h"
+#include "accelerometer.h"
+#include "debug.h"
+#include <math.h>
 
 #endif /* INCLUDE_ALL_H_ */

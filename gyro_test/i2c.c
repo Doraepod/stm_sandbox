@@ -2,7 +2,7 @@
 
 uint8_t register_address[1] = {0};
 
-
+static I2CDriver    *i2cDriver  = &I2CD1;
 /**
  * @brief   Start hardware i2c module as master
  */
