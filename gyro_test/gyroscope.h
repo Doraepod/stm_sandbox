@@ -9,13 +9,13 @@
 #define GYRO_DATA_REG   0xA8    // address of OUT_X_L register with autoincrement bit set
 
 
-void gyroscope_init(void);
+void gyroscopeInit(void);
 
-msg_t read_gyroscope(int16_t *axis_values);
+msg_t readGyroscope(int16_t *axis_values);
 
-msg_t get_gyro_speed(float *axis_speed);
+msg_t getGyroSpeed(float *axis_speed);
 
-void get_gyro_error(float *buf);
+void getGyroError(float *buf);
 
 
 

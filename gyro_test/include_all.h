@@ -21,4 +21,6 @@
 #include "debug.h"
 #include <math.h>
 
+#define RAD2DEG 180 / M_PI
+
 #endif /* INCLUDE_ALL_H_ */

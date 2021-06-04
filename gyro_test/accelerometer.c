@@ -1,6 +1,6 @@
 #include "include_all.h"
 
-void accelerometer_init(void)
+void accelerometerInit(void)
 {
     uint8_t accel_id[1] = {0};
     uint8_t initbuf[5];
@@ -19,7 +19,7 @@ void accelerometer_init(void)
     }
 }
 
-msg_t read_accelerometer(int16_t *axis_values)
+msg_t readAccelerometer(int16_t *axis_values)
 {
     uint8_t accel_temp[6] = {0, 0, 0, 0, 0, 0};
     msg_t msg = i2c_register_read(ACCEL_ADDR, ACCEL_DATA_REG, accel_temp, 6, 1000);

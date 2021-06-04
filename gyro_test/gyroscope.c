@@ -9,7 +9,7 @@ float   gyro_speed[3] = {0, 0, 0};
 /**
  * @brief   Initialize gyroscope
  */
-void gyroscope_init(void)
+void gyroscopeInit(void)
 {
     uint8_t gyro_id[1] = {0};
     uint8_t initbuf[5];
@@ -35,7 +35,7 @@ void gyroscope_init(void)
  * @param
  *          *axis_values         array where to store read data
  */
-msg_t read_gyroscope(int16_t *axis_values)
+msg_t readGyroscope(int16_t *axis_values)
 {
     uint8_t gyro_temp[6] = {0, 0, 0, 0, 0, 0};
     msg_t msg = i2c_register_read(GYRO_ADDR, GYRO_DATA_REG, gyro_temp, 6, 1000);
@@ -49,11 +49,11 @@ msg_t read_gyroscope(int16_t *axis_values)
 }
 
 
-msg_t get_gyro_speed(float *axis_speed)
+msg_t getGyroSpeed(float *axis_speed)
 {
     int16_t gyro_axis_values[3] = {0, 0, 0};
     uint8_t i = 0;
-    msg_t msg = read_gyroscope(gyro_axis_values);
+    msg_t msg = readGyroscope(gyro_axis_values);
     for(i = 0; i < 3; i++)
     {
         axis_speed[i] = (float)gyro_axis_values[i] * 0.07;
@@ -61,7 +61,7 @@ msg_t get_gyro_speed(float *axis_speed)
     return msg;
 }
 
-void get_gyro_error(float *buf)
+void getGyroError(float *buf)
 {
     int16_t temp_buf[10][3] = {{0}};
 
@@ -70,7 +70,7 @@ void get_gyro_error(float *buf)
     float x_mean = 0, y_mean = 0, z_mean = 0;
     for(i = 0; i < 10; i++)
     {
-        msg_t msg = read_gyroscope(super_temp);
+        msg_t msg = readGyroscope(super_temp);
         for(j = 0; j < 3; j++)
         {
             temp_buf[i][j] = super_temp[j];

@@ -9,8 +9,8 @@
 #define ACCEL_DATA_REG   0xA8    // address of OUT_X_L register with autoincrement bit set
 
 
-void accelerometer_init(void);
+void accelerometerInit(void);
 
-msg_t read_accelerometer(int16_t *axis_values);
+msg_t readAccelerometer(int16_t *axis_values);
 
 #endif
