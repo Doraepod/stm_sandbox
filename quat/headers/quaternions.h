@@ -21,6 +21,7 @@ quaternion_t quatRotate(quaternion_t axis, quaternion_t rotor);
 quaternion_t quatInvert(quaternion_t quat);
 quaternion_t quatScale(quaternion_t quat, float scaler);
 quaternion_t quatAdd(quaternion_t first, quaternion_t second);
+quaternion_t quatSubtract(quaternion_t first, quaternion_t second);
 quaternion_t quatNormalize(quaternion_t quat);
 euler_angles_t quat2Euler(quaternion_t quat);
 

@@ -48,6 +48,16 @@ quaternion_t quatAdd(quaternion_t first, quaternion_t second)
     return res;
 }
 
+quaternion_t quatSubtract(quaternion_t first, quaternion_t second)
+{
+    quaternion_t res;
+    res.w = first.w - second.w;
+    res.x = first.x - second.x;
+    res.y = first.y - second.y;
+    res.z = first.z - second.z;
+    return res;
+}
+
 euler_angles_t quat2Euler(quaternion_t quat)
 {
     euler_angles_t res;

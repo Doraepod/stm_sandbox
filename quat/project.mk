@@ -13,6 +13,6 @@ PROJECT_INCDIR	= headers
 # Additional libraries
 PROJECT_LIBS	=
 # Compiler options
-PROJECT_OPT     =
+PROJECT_OPT     = -lm
 
 # Additional .mk files are included here
