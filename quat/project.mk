@@ -1,8 +1,7 @@
 # C source files
 PROJECT_CSRC 	= src/main.c \
                   src/i2c.c  \
-                  src/lld_gyroscope.c \
-                  src/lld_accelerometer.c \
+                  src/lld_gyro_axel.c \
                   src/quaternions.c \
                   src/debug.c \
                   src/magwick.c

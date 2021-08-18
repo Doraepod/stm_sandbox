@@ -5,8 +5,8 @@ quaternion_t quatProduct(quaternion_t first, quaternion_t second)
     quaternion_t res;
     res.w = first.w * second.w - first.x * second.x - first.y * second.y - first.z * second.z;
     res.x = first.w * second.x + first.x * second.w + first.y * second.z - first.z * second.y;
-    res.y = first.w * second.y - first.x * second.z + first.y * second.w - first.z * second.x;
-    res.z = first.w * second.z + first.x * second.y + first.y * second.x - first.z * second.w;
+    res.y = first.w * second.y - first.x * second.z + first.y * second.w + first.z * second.x;
+    res.z = first.w * second.z + first.x * second.y - first.y * second.x + first.z * second.w;
     return res;
 }
 

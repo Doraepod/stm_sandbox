@@ -2,8 +2,8 @@
 #define HEADERS_MAGWICK_H_
 
 #include "quaternions.h"
-#include "lld_gyroscope.h"
-#include "lld_accelerometer.h"
+#include "lld_gyro_axel.h"
+#include "debug.h"
 
 
 
