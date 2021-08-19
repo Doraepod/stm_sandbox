@@ -27,7 +27,7 @@ void gaInit(void)
 msg_t accelRead(int16_t *axis_values)
 {
     uint8_t accel_temp[6] = {0, 0, 0, 0, 0, 0};
-    msg_t msg = i2cRegisterRead(GYRO_AXEL_ADR, AXEL_DATA_REG, accel_temp, 6, 1000);
+    msg_t msg = i2cRegisterRead(GYRO_AXEL_ADR, AXEL_DATA_REG, accel_temp, 6, TIME_MS2I(1000));
 
     uint8_t i = 0;
     for(i = 0; i < 3; i++)
@@ -46,7 +46,7 @@ msg_t accelRead(int16_t *axis_values)
 msg_t gyroRead(int16_t *axis_values)
 {
     uint8_t gyro_temp[6] = {0, 0, 0, 0, 0, 0};
-    msg_t msg = i2cRegisterRead(GYRO_AXEL_ADR, GYRO_DATA_REG, gyro_temp, 6, 10000);
+    msg_t msg = i2cRegisterRead(GYRO_AXEL_ADR, GYRO_DATA_REG, gyro_temp, 6, TIME_MS2I(1000));
 
     uint8_t i = 0;
     for(i = 0; i < 3; i++)

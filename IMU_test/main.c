@@ -43,6 +43,17 @@ void dbgprintf( const char* format, ... )
     va_end(ap);
 }
 
+void magInit(void)
+{
+    uint8_t ctrl_regs[4];
+    ctrl_regs[0] = 0b11100000;  //Config register A with autoincrement
+    ctrl_regs[1] = 0b10001100;  //no reset, continious mode, 100Hz, temperature compensation
+    ctrl_regs[2] = 0b00000000;  //no offset cancelation, no lpf
+    ctrl_regs[3] = 0b00010000;  //no self-test, no bits inversion, use i2c, avoid incorrect data
+
+    i2cSimpleWrite(MAG_ADR, ctrl_regs, 4, TIME_MS2I(1000));
+}
+
 int main(void) {
 
     halInit();
@@ -51,6 +62,7 @@ int main(void) {
     i2cStartUp();
     debug_stream_init();
     dbgprintf("Test\n\r");
+    magInit();
 
     uint8_t buf[1] = {0};
     i2cRegisterRead(BAR_ADR, WHO_AM_I_ADR, buf, 1, TIME_MS2I(1000));
@@ -67,20 +79,18 @@ int main(void) {
     if(buf[0] == MAG_ID)
         palSetLine(LINE_LED3);
     dbgprintf("mag %d\r\n", buf[0]);
-//    uint8_t i = 1;
-
-//    for(i = 29; i <= 127; i++)
-//    {
-//        chThdSleepMilliseconds(50);
-//        i2cRegisterRead(i, WHO_AM_I_ADR, buf, 1, TIME_MS2I(1000));
-//        uint8_t flag = i2cGetErrors(&I2CD1);
-//        dbgprintf("%d flag %d\r\n", i, flag);
-//
-//    }
 
 
-
+    uint8_t mag_buf[6];
+    int16_t axis_values[3];
     while (true) {
-        chThdSleepMilliseconds(1000);
+        i2cRegisterRead(MAG_ADR, 0xE8, mag_buf, 6, TIME_MS2I(1000));
+        uint8_t i = 0;
+        for(i = 0; i < 3; i++)
+        {
+            axis_values[i] = (int16_t)((uint16_t)(mag_buf[i * 2]) | ((uint16_t)(mag_buf[(i * 2) + 1]) << 8));
+        }
+        dbgprintf("x: %d y: %d z: %d\r\n", axis_values[0], axis_values[1], axis_values[2]);
+        chThdSleepMilliseconds(100);
     }
 }
