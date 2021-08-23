@@ -4,7 +4,8 @@ float angular_speed[3]    = {0, 0, 0};
 int16_t acceleration[3]   = {0, 0, 0};
 int16_t magnetometer_data[3] = {0, 0, 0};
 
-#define BETA 0.1
+#define BETA 0.05
+#define ZETA 0.001
 
 quaternion_t base = {
     .w = 1,
@@ -14,6 +15,13 @@ quaternion_t base = {
 };
 
 quaternion_t gyro_speed = {
+    .w = 0,
+    .x = 0,
+    .y = 0,
+    .z = 0
+};
+
+quaternion_t gyro_drift = {
     .w = 0,
     .x = 0,
     .y = 0,
@@ -173,7 +181,6 @@ static THD_FUNCTION(Magwick, arg)
         measured_magnetic_lines = quatNormalize(measured_magnetic_lines);
 
 
-
         //Evaluate difference between measured and real values
         quaternion_t f_a = quatSubtract(quatRotate(real_acceleration, quatInvert(base)), measured_acceleration);
         quaternion_t f_m = quatSubtract(quatRotate(real_magnetic_lines, quatInvert(base)), measured_magnetic_lines);
@@ -181,6 +188,7 @@ static THD_FUNCTION(Magwick, arg)
         //gradient_search
         quaternion_t gyro_error = quatNormalize(jacob(f_a, f_m));
 
+//        gyro_drift = quatAdd(gyro_drift, quatScale(quatProduct(quatScale(quatInvert(base), 2), gyro_error), TIME_STEP_MS * 0.001 * ZETA));
 
         //translate angular speed from gyro to Earth axes
         quaternion_t gyro_earth_speed = quatScale(quatProduct(base, gyro_speed), 0.5);

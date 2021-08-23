@@ -68,7 +68,12 @@ int main(void) {
     while(1)
     {
         euler_angles_t angles = quat2Euler(getQuat());
-        dbgprintf("yaw = %d, pitch = %d, roll = %d\r\n", (int)(angles.yaw * RAD2DEG), (int)(angles.pitch * RAD2DEG), (int)(angles.roll * RAD2DEG));
+//        dbgprintf("yaw = %d, pitch = %d, roll = %d\r\n", (int)(angles.yaw * RAD2DEG), (int)(angles.pitch * RAD2DEG), (int)(angles.roll * RAD2DEG));
+        float buf[3];
+        buf[0] = angles.yaw * RAD2DEG;
+        buf[1] = angles.pitch * RAD2DEG;
+        buf[2] = angles.roll * RAD2DEG;
+        sdWrite(&SD3, (uint8_t*)buf, 12);
         chThdSleepMilliseconds(200);
     }
 #endif
