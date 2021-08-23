@@ -2,6 +2,7 @@
 #include "hal.h"
 #include <chprintf.h>
 #include "i2c.h"
+#include "math.h"
 
 #define WHO_AM_I_ADR 0b00001111
 
@@ -54,6 +55,12 @@ void magInit(void)
     i2cSimpleWrite(MAG_ADR, ctrl_regs, 4, TIME_MS2I(1000));
 }
 
+
+float mag_raw_to_mgauss(int16_t raw)
+{
+    return ((float)raw) * 1.5f;
+}
+
 int main(void) {
 
     halInit();
@@ -61,36 +68,44 @@ int main(void) {
 
     i2cStartUp();
     debug_stream_init();
-    dbgprintf("Test\n\r");
+//    dbgprintf("Test\n\r");
     magInit();
 
     uint8_t buf[1] = {0};
     i2cRegisterRead(BAR_ADR, WHO_AM_I_ADR, buf, 1, TIME_MS2I(1000));
     if(buf[0] == BAR_ID)
         palSetLine(LINE_LED2);
-    dbgprintf("bar %d\r\n", buf[0]);
+//    dbgprintf("bar %d\r\n", buf[0]);
 
     i2cRegisterRead(GYRO_ADR, WHO_AM_I_ADR, buf, 1, TIME_MS2I(1000));
     if(buf[0] == GYRO_ID)
         palSetLine(LINE_LED1);
-    dbgprintf("gyr %d\r\n", buf[0]);
+//    dbgprintf("gyr %d\r\n", buf[0]);
 
     i2cRegisterRead(MAG_ADR, MAG_WHO_AM_I_ADR, buf, 1, TIME_MS2I(1000));
     if(buf[0] == MAG_ID)
         palSetLine(LINE_LED3);
-    dbgprintf("mag %d\r\n", buf[0]);
+//    dbgprintf("mag %d\r\n", buf[0]);
 
 
     uint8_t mag_buf[6];
-    int16_t axis_values[3];
+    int16_t raw_axis_values[3];
+
+
+
     while (true) {
         i2cRegisterRead(MAG_ADR, 0xE8, mag_buf, 6, TIME_MS2I(1000));
         uint8_t i = 0;
         for(i = 0; i < 3; i++)
         {
-            axis_values[i] = (int16_t)((uint16_t)(mag_buf[i * 2]) | ((uint16_t)(mag_buf[(i * 2) + 1]) << 8));
+            raw_axis_values[i] = (int16_t)((uint16_t)(mag_buf[i * 2]) | ((uint16_t)(mag_buf[(i * 2) + 1]) << 8));
+
         }
-        dbgprintf("x: %d y: %d z: %d\r\n", axis_values[0], axis_values[1], axis_values[2]);
+//        raw_axis_values[0] -= 646;
+//        raw_axis_values[1] += 543;
+//        raw_axis_values[3] -= 86;
+//        dbgprintf("x: %d y: %d z: %d length: %d\r\n", raw_axis_values[0], raw_axis_values[1], raw_axis_values[2], (int)sqrt(raw_axis_values[0] * raw_axis_values[0] + raw_axis_values[1] * raw_axis_values[1]));
+        sdWrite(&SD3, (uint8_t *)raw_axis_values, 6);
         chThdSleepMilliseconds(100);
     }
 }

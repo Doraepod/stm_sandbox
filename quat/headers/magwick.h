@@ -11,7 +11,8 @@
 
 #define DEG2RAD 3.14 / 180
 #define RAD2DEG 180 / 3.14
-#define TIME_STEP 100
+#define TIME_STEP_MS 100
+#define TIME_STEP_S TIME_STEP_MS * 0.001
 
 void magwickInit(tprio_t priority);
 
