@@ -151,7 +151,7 @@ quaternion_t jacob(quaternion_t quat_a, quaternion_t quat_m)
 //    return quatNormalize(gyro_error);
 //}
 
-static THD_WORKING_AREA(magwickThread, 256); // 256 - stack size
+static THD_WORKING_AREA(magwickThread, 512); // 256 - stack size
 static THD_FUNCTION(Magwick, arg)
 {
     arg = arg;              // just to avoid warnings
@@ -162,7 +162,7 @@ static THD_FUNCTION(Magwick, arg)
         gyroReadSpeed(angular_speed);
         gyro_speed.x = angular_speed[0] * DEG2RAD;
         gyro_speed.y = angular_speed[1] * DEG2RAD;
-        gyro_speed.z = angular_speed[2] * DEG2RAD;
+        gyro_speed.z = -angular_speed[2] * DEG2RAD;
 
         //read accelerometer, update quaternion and normalize it
         accelRead(acceleration);
@@ -188,8 +188,10 @@ static THD_FUNCTION(Magwick, arg)
         //gradient_search
         quaternion_t gyro_error = quatNormalize(jacob(f_a, f_m));
 
-//        gyro_drift = quatAdd(gyro_drift, quatScale(quatProduct(quatScale(quatInvert(base), 2), gyro_error), TIME_STEP_MS * 0.001 * ZETA));
+        quaternion_t a = quatScale(quatProduct(quatScale(quatInvert(base), 2), gyro_error), TIME_STEP_MS * 0.001 * ZETA);
 
+        gyro_drift = quatAdd(gyro_drift, a);
+//        gyro_speed = quatSubtract(gyro_speed, gyro_drift);
         //translate angular speed from gyro to Earth axes
         quaternion_t gyro_earth_speed = quatScale(quatProduct(base, gyro_speed), 0.5);
 

@@ -2,6 +2,7 @@
 # Build global options
 # NOTE: Can be overridden externally.
 #
+
 include project.mk
 
 # Compiler options here.

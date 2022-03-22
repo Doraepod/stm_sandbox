@@ -1,47 +1,47 @@
 #include "ch.h"
 #include "hal.h"
-#include <chprintf.h>
 
-static const SerialConfig sd_st_cfg = {
+static const SerialConfig usb_conf = {
   .speed = 115200,
   .cr1 = 0, .cr2 = 0, .cr3 = 0
 };
 
-static SerialDriver         *debug_serial = &SD3;
-static BaseSequentialStream *debug_stream = NULL;
+static SerialDriver         *serial = &SD3;
 
-void debug_stream_init( void )
+void control_led(uint16_t mode)
 {
-    sdStart( debug_serial, &sd_st_cfg );
-    palSetPadMode( GPIOD, 8, PAL_MODE_ALTERNATE(7) );
-    palSetPadMode( GPIOD, 9, PAL_MODE_ALTERNATE(7) );
-
-    debug_stream = (BaseSequentialStream *)debug_serial;
+    switch(mode){
+    case 0:
+        palSetLine(LINE_LED1);
+        palClearLine(LINE_LED2);
+        palClearLine(LINE_LED3);
+        break;
+    case 1:
+        palSetLine(LINE_LED2);
+        palClearLine(LINE_LED1);
+        palClearLine(LINE_LED3);
+        break;
+    case 2:
+        palSetLine(LINE_LED3);
+        palClearLine(LINE_LED1);
+        palClearLine(LINE_LED2);
+        break;
+    }
 }
 
-void dbgprintf( const char* format, ... )
-{
-    if ( !debug_stream )
-        return;
-
-    va_list ap;
-    va_start(ap, format);
-    chvprintf(debug_stream, format, ap);
-    va_end(ap);
-}
+uint16_t buf[1] = {0};
 
 int main(void) {
-
     halInit();
     chSysInit();
 
-    debug_stream_init();
-    dbgprintf("Test\n\r");
-    uint16_t i = 0;
-    while (true) {
-        chThdSleepMilliseconds(1000);
-        dbgprintf("%d\n\r", i);
-        palToggleLine(LINE_LED2);
-        i++;
+    sdStart(serial, &usb_conf);
+    palSetPadMode( GPIOD, 8, PAL_MODE_ALTERNATE(7) );
+    palSetPadMode( GPIOD, 9, PAL_MODE_ALTERNATE(7) );
+
+    while (1) {
+        sdRead(serial, (uint8_t *)buf, 2);
+        control_led(buf[0] % 3);
+
     }
 }
